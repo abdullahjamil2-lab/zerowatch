@@ -40,16 +40,15 @@ from html import unescape
 # Settings
 # ---------------------------------------------------------------------------
 
-# Your HOP store page. On deliveroo.ae (in a browser), set your address, open
-# "24/7 Deliveroo HOP with Choithrams" and copy the link from the address bar.
-# To watch more than one store, separate the links with commas.
-HOP_URLS = os.environ.get("HOP_URLS") or "PASTE_YOUR_HOP_LINK_HERE"
+# Your HOP store page. To watch more than one store, separate the links with commas.
+# A HOP_URLS secret on GitHub (or environment variable) overrides this.
+HOP_URLS = os.environ.get("HOP_URLS") or "https://deliveroo.ae/en/menu/Dubai/hopmc/deliveroo-hop-motor-city"
 
-# The ntfy channel your phone is subscribed to. Anyone who knows it can send you
-# notifications, so keep it hard to guess. On GitHub, set it as the NTFY_TOPIC
-# secret; only paste it here when running on your own computer, and never in a
-# public repo.
-NTFY_TOPIC = os.environ.get("NTFY_TOPIC") or ""
+# The ntfy channel your phone is subscribed to. It's written here because GitHub
+# doesn't let Claude set repository secrets, so anyone who can see this repo can
+# see it. To hide it, add it as the NTFY_TOPIC secret (which overrides this) and
+# then remove it from this line.
+NTFY_TOPIC = os.environ.get("NTFY_TOPIC") or "zero-waste-bag-vpwbx3t2"
 NTFY_SERVER = os.environ.get("NTFY_SERVER") or "https://ntfy.sh"
 
 # How often to look when left running, in minutes. Be gentle with Deliveroo.

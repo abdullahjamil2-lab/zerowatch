@@ -4,16 +4,13 @@ Pings your phone when a Deliveroo HOP Zero Waste Bag is listed and in stock, and
 
 It checks every 5 minutes from 7am to 11pm Dubai time. It only reads the public store page; it never logs in, adds to basket or orders.
 
-## Setup (once)
+## Setup
 
-1. **Notifications.** Install **ntfy** (free, App Store or Google Play), tap **+**, enter your private channel name and tap **Subscribe**. The channel name is in your chat with Claude; it starts `zero-waste-bag-`. Don't write it anywhere in this repo, because the repo is public.
-2. **Your HOP link.** On deliveroo.ae in a browser, enter your address, open **24/7 Deliveroo HOP with Choithrams** and copy the link from the address bar.
-3. **Secrets.** In this repo, go to **Settings › Secrets and variables › Actions › New repository secret** and add two:
-   * `HOP_URLS`: your HOP link
-   * `NTFY_TOPIC`: your channel name
+It's watching Deliveroo HOP Motor City, and the HOP link and ntfy channel are written near the top of `zero_waste_watch.py`. All you need is the **ntfy** app (free, App Store or Google Play) subscribed to the channel named there.
 
-   Secrets stay hidden even though the repo is public.
-4. **Test.** Go to **Actions › Zero Waste Bag watcher › Run workflow** and pick `test-push`; your phone should ping. Then run it again with `check` and open the run to see what it found.
+To test it any time, go to **Actions › Zero Waste Bag watcher › Run workflow** and pick `test-push` (your phone should ping) or `check` (shows what it can see on Deliveroo right now).
+
+Because this repo is public, anyone who finds it can see the channel name and could send you pings. To hide it, add it as a secret instead (**Settings › Secrets and variables › Actions**, named `NTFY_TOPIC`), which overrides the one in the script, then delete it from the script. The same works for `HOP_URLS`.
 
 ## What you'll get
 
