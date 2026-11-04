@@ -715,9 +715,11 @@ def main():
         return cmd_report()
     if not hop_urls():
         print("Set HOP_URLS first: on deliveroo.ae (in a browser) set your address, open "
-              "'24/7 Deliveroo HOP with Choithrams', copy the link and paste it into HOP_URLS "
-              "at the top of this file (or set it as an environment variable).")
-        return 2
+              "'24/7 Deliveroo HOP with Choithrams' and copy the link. On GitHub, add it as the "
+              "HOP_URLS repository secret; on your own computer, paste it into HOP_URLS at the "
+              "top of this file.")
+        # Scheduled runs exit cleanly so GitHub doesn't email a failure every few minutes.
+        return 0 if args.once else 2
     if args.check:
         return cmd_check()
     if args.once:
