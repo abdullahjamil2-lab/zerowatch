@@ -1,0 +1,60 @@
+# Runs the Zero Waste Bag watcher on GitHub's servers, so it keeps going when
+# your laptop is off. This file must live at .github/workflows/watch.yml
+name: Zero Waste Bag watcher
+
+on:
+  schedule:
+    # Every 5 minutes from 07:00 to 22:55 Dubai time. GitHub uses UTC, which is
+    # Dubai minus 4 hours, so hours 3-18 here are 07-22 in Dubai. Public repos get
+    # unlimited free minutes; if you make this repo private, change the line
+    # below to "7,27,47 3-18 * * *" (every 20 minutes). GitHub can run
+    # these a few minutes late when it's busy.
+    - cron: "*/5 3-18 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "What to run"
+        type: choice
+        options:
+          - check
+          - report
+          - test-push
+          - once
+        default: check
+
+permissions:
+  contents: write   # lets it save state.json and sightings.csv back to the repo
+
+concurrency:
+  group: zero-waste-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Look at Deliveroo HOP
+        env:
+          HOP_URLS: ${{ secrets.HOP_URLS }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          MODE: ${{ inputs.mode || 'once' }}
+        run: python3 zero_waste_watch.py "--$MODE"
+
+      - name: Save what it saw
+        if: always()
+        run: |
+          for f in state.json sightings.csv; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
+          if git diff --cached --quiet; then
+            echo "Nothing new to save."
+            exit 0
+          fi
+          git config user.name "zero-waste-watcher"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Watcher update"
+          git pull --rebase --quiet || true
+          git push
